@@ -40,18 +40,49 @@
 <div class="title">About this reposity </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> This repository implements the stack data structure. This stack tries it's best to minimize damage it can do after a buffer overflow or other corruption.</p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> This repository implements the stack data structure. This stack does it's best to minimize the damage it can do after a buffer overflow or other corruption.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Building</h1>
-<p>There is currently no way to build this project.</p>
+<p><a href="https://cmake.org/">CMake</a> is used as this projects build system. To build the project, run the following from the root directory.</p>
+<div class="fragment"><div class="line">mkdir build</div>
+<div class="line">cd build</div>
+<div class="line">cmake ..</div>
+<div class="line">cmake --build .</div>
+</div><!-- fragment --><p>You will now find two exectutables in the build directory (<code>StackDemo</code> and <code>StackStress</code>) and one shared library (<code>StackLib</code>).</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Running the tests</h1>
-<p>There are currently no tests for this project.</p>
+<p><code>StackStress</code> tests <code>StackLib</code> by creating a <code>Stack</code> and then repeatedly poping from it and pushing to it. If <code>StackStress</code> runs to completion with no assertion failures, <code>StackLib</code> can be used for standard stack functionality.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
+Running the demo</h1>
+<p><code>StackDemo</code> allows you to play around with an interactive <code>Stack</code> that stores ints.</p>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Documentation</h1>
 <p>This project's documentation can be accessed <a href="https://attractadore.github.io/TrackStackDocs">here</a>. If you want to generate the documentation yourself, you will need <a href="https://www.doxygen.nl">doxygen</a>. Once you have doxygen run the following in the repository's root directory:</p>
 <div class="fragment"><div class="line">doxygen Doxyfile</div>
-</div><!-- fragment --><p>The generated documentation can now be found in the docs/ folder. </p>
+</div><!-- fragment --><p>The generated documentation can now be found in the docs/ folder.</p>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Stack protection features</h1>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Enabling protection features</h2>
+<p>Each of the protection features described below can be enabled or disabled by adding or removing its symbolic parameter from <code>StackLib's</code> <code>target_compile_definitions</code> in <code>CMakeLists.txt</code>.</p>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Metadata canaries</h2>
+<p>When this option is turned on, the <code>Stack's</code> a canary value will be inserted before and after a <code>Stack's</code> representation in memory. If either of them gets altered, the <code>Stack</code> will refuse to perform any further operations. To turn metadata canaries on, define <code>USE_CANARY</code>.</p>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Data canaries</h2>
+<p>When this option is turned on, a canary value will be inserted before and after a <code>Stack's</code> data array. If either of them gets altered, the <code>Stack</code> will refuse to perform any further operation. To turn data canaries on, define <code>USE_DATA</code>.</p>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Metadata hashing</h2>
+<p>When this option is turned on, a <code>Stack's</code> metadata will be hashed and the result stored. If any of the <code>Stack's</code> fields are tampered with, the hash computed during the verification process will not match the one stored, and the <code>Stack</code> will refuse to perform any further operation. To turn metadata hashing on, define <code>USE_HASH_FAST</code>.</p>
+<h2><a class="anchor" id="autotoc_md10"></a>
+Data hashing</h2>
+<p>When this option is turned on, a <code>Stack's</code> data will be hashed and the result stored. If the <code>Stack's</code> data is tampered with, the hash computed during the verification process will not match the one stored, and the <code>Stack</code> will refuse to perform any further operation. To turn data hashing on, define <code>USE_HASH_FULL</code>. Turning on data hashing also turns on metadata hashing. Data hashing has a very high cost.</p>
+<h2><a class="anchor" id="autotoc_md11"></a>
+Data poisoning</h2>
+<p>When this option is turned on, memory that has been reserved for a <code>Stack's</code> elements but not yet used will be filled with certain values. If during the verification process an unused byte's value doesn't match its corresponding poison value, the <code>Stack</code> will refuse to perform any further operation. To turn data poisoning on, define <code>USE_POISON</code>. Data poisoning has a moderate cost.</p>
+<h2><a class="anchor" id="autotoc_md12"></a>
+Event logging</h2>
+<p>When this option is turned on, the <code>Stack</code> will log what is happening to it. To turn logging on, define <code>USE_LOG</code>. The default log file name is <code>stack_log</code>. To change it, define <code>STACK_LOG_FILENAME=filename</code> where <code>filename</code> is the desired log file name. Logging can slow down other <code>Stack</code> operations. The generated log files can quickly start taking up a lot of disk space. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
